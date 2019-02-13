@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>CAUDIT: Continuous Auditing of SSH Servers To Mitigate Brute-Force Attacks</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</head>
+
+<!-- <div class="jumbotron wide">
+     </div> -->
+<div class="jumbotron" id="home">
+    <div class="container">
+        <h2 align="left">CAUDIT: Continuous Auditing of SSH Servers To Mitigate Brute-Force Attacks</h2>
+        <h4 align="left">
+            <a href="https://pmcao.github.io">Phuong Cao<sup>1</sup></a>,
+            <a href="#">Yuming Wu<sup>1</sup></a>,
+            <a href="#">Subho Banerjee<sup>1</sup></a>,
+            <a href="#">Justin Azoff<sup>2,3</sup></a>,
+            <a href="#">Alex Withers<sup>3</sup></a>,
+            <a href="#">Zbigniew Kalbarczyk <sup>1</sup></a>,
+            <a href="#">Ravishankar Iyer<sup>1</sup></a>,
+        </h4>
+        <h5 align="left">
+            <sup>1</sup> University of Illinois at Urbana-Champaign,
+            <sup>2</sup>Corelight,
+            <sup>3</sup>National Center for Supercomputing Applications
+        </h5>
+        <h5 align="left">
+            In USENIX Symposium on Networked Systems Design and Implementation (NSDI), 2019 
+        </h5>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Abstract</h2>
+            <p>
+                This paper describes CAUDIT, an operational system deployed at the National Center for Supercomputing Applications (NCSA) at the University of Illinois. CAUDIT is a fully automated system to enable the identification and exclusion of hosts that are vulnerable to SSH brute-force attacks. Its key features includes: 1) a honeypot for attracting SSH-based attacks over a /16 IP address range and extracting key-metadata (e.g., source IP, password, SSH-client version, or -key) from these attacks; 2) executing audits on the live production network by replaying attack attempts recorded by the honeypot; 3) using the IP addresses recorded by the honeypot to block SSH attack attempts at the network border using a Black Hole Router (BHR) while significantly reducing the load on NCSA's security monitoring system; and 4) informing peer sites of attack attempts in real-time to ensure containment of coordinated attacks. The system is composed of existing techniques with custom-built components, and its novelty is to execute at a scale that has not been validated earlier (thousands of nodes and tens of millions of attack attempts per day). Experience over 463 days shows that CAUDIT successfully blocks an average of 57 million attack attempts on a daily basis using the proposed BHR. This represents a 66x reduction in the number of SSH attempts compared to the daily average and has reduced 78% of the traffic to the NCSA internal network-security-monitoring infrastructure.
+            </p>
+            <p></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <br>
+        <div class="col-md-12">
+            <h4 align="center">For more information check out our <a href="https://pmcao.github.io/files/nsdi19-cao.pdf">paper</a> or <a href="#">slides</a> from NSDI'19</h4>
+        </div>
+
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <h2 id="primary">Primary Datasets</h2>
+
+            <ol>
+                <li> <b>SSH attack attempts</b>: We collected 405,352,245 SSH attack attempts from 4,035,975 unique source IP address during Feb 2017 - May 2018. There were 159 unique SSH client key fingerprints, 171 unique SSH client versions, 3,214 unique usernames, and 95,989 unique passwords.
+                </li>
+                <li> <b>Correlation with haveibeenpwnd database</b>: We correlated the passwords used in attack attempts with a <a href="https://haveibeenpwned.com/Passwords">snapshot of the HIBP password dataset</a> (5B passwords as of Sep 2018) to identify personalized passwords.
+                </li>
+            </ol>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Format</th>
+                        <th>SHA-256 Hash (Compressed)</th>
+                        <th>Labels</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="ssh.tgz">SSH attack attempts</a></td>
+                        <td>gzipped json</td>
+                        <td>131 GB</td>
+                        <td><a href="#">README</a></td>
+                        <td>
+                            <a onclick="toggle(this)">Show</a>
+                            <tt style="display:none" onclick="toggle(this)">
+                                #
+                            </tt>
+                        </td>
+                        <td><span class="label label-primary">SSH</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><a href="keys.tgz">SSH client key fingerprint</a></td>
+                        <td>gzipped text</td>
+                        <td>2 KB</td>
+                        <td><a href="#">README</a></td>
+                        <td>
+                            <a onclick="toggle(this)">Show</a>
+                            <tt style="display:none" onclick="toggle(this)">
+                                #
+                            </tt>
+                        </td>
+                        <td><span class="label label-warning">ASN</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><a href="keys.tgz">Source IP addresses</a></td>
+                        <td>gzipped text</td>
+                        <td>2 KB</td>
+                        <td><a href="#">README</a></td>
+                        <td>
+                            <a onclick="toggle(this)">Show</a>
+                            <tt style="display:none" onclick="toggle(this)">
+                                #
+                            </tt>
+                        </td>
+                        <td><span class="label label-warning">ASN</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><a href="keys.tgz">SSH client versions</a></td>
+                        <td>gzipped text</td>
+                        <td>2 KB</td>
+                        <td><a href="#">README</a></td>
+                        <td>
+                            <a onclick="toggle(this)">Show</a>
+                            <tt style="display:none" onclick="toggle(this)">
+                                #
+                            </tt>
+                        </td>
+                        <td><span class="label label-warning">ASN</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><a href="keys.tgz">Unique passwords</a></td>
+                        <td>gzipped text</td>
+                        <td>2 KB</td>
+                        <td><a href="#">README</a></td>
+                        <td>
+                            <a onclick="toggle(this)">Show</a>
+                            <tt style="display:none" onclick="toggle(this)">
+                                #
+                            </tt>
+                        </td>
+                        <td><span class="label label-warning">ASN</span></td>
+                    </tr>
+
+
+
+                </tbody>
+            </table>	
+
+
+
+				</div>
+        <div class="col-md-12">
+            <h2 class="page-header" id="analysis">Code for SSH honeypot and SSH auditor</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Language</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="ssh.tgz">SSH authentication logger</a></td>
+                        <td>Golang</td>
+                        <td><a href="https://github.com/ncsa/ssh-auth-logger">https://github.com/ncsa/ssh-auth-logger</td></a>
+                    </tr>
+                    <tr>
+                        <td><a href="ssh.tgz">SSH auditor logger</a></td>
+                        <td>Golang</td>
+                        <td><a href="https://github.com/ncsa/ssh-auditor">https://github.com/ncsa/ssh-auditor</td></a>
+                    </tr>
+                    <tr>
+                        <td><a href="ssh.tgz">Alert-sharing network</a></td>
+                        <td>Python, Golang</td>
+                        <td><a href="https://git.ncsa.illinois.edu/awithers/sdaia">https://git.ncsa.illinois.edu/awithers/sdaia</td></a>
+                    </tr>
+
+
+
+
+                </tbody>
+            </table>	
+				    
+        </div>
+        <div class="col-md-12">
+            <h2 class="page-header" id="analysis">Analysis and Plots</h2>
+					  A sample of scripts used to process the datasets, analyze the processed datasets, and produce some of the plots in our NSDI'19 paper can be downloaded from <a href="https://github.com/pmcao/caudit">https://github.com/pmcao/caudit</a>.
+				    
+        </div>
+		</div>
+	  
+
+		<div class="row">
+			  <div class="col-md-12">
+				    <h2 class="page-header" id="contact">Contact</h2>
+				    <div class="col-lg-10">
+					      <p> If you have any questions, comments or concerns, or if you're interested in using our data in your research, please email <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;tf=1&amp;to=pcao3@illinois.edu" target="_blank">Phuong Cao</a>!</p>
+	          </div>
+
+
+	          <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	          <script>
+		         var toggle = function(showButton) {
+			           $(showButton).parent().children().toggle();
+		         }
+	          </script>
+            
+
+        </div></div></body></html>

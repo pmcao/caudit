@@ -1,0 +1,9 @@
+SELECT 
+    fingerprint, 
+    count(fingerprint) AS c
+FROM events 
+WHERE isNotNull(fingerprint)
+GROUP BY fingerprint
+ORDER BY c ASC
+INTO OUTFILE '/ssd/data/fingerprint.csv'
+FORMAT CSV

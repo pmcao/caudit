@@ -1,0 +1,1 @@
+select count(*), toMonday(date) as week from events where fingerprint not like '' group by week order by week asc;
